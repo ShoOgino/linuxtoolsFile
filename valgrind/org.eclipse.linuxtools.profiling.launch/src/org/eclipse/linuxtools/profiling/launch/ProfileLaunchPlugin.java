@@ -8,23 +8,24 @@
  * Contributors:
  *    Elliott Baron <ebaron@redhat.com> - initial API and implementation
  *******************************************************************************/ 
-package org.eclipse.linuxtools.valgrind.memcheck;
+package org.eclipse.linuxtools.profiling.launch;
 
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-public class MemcheckPlugin extends AbstractUIPlugin {
+public class ProfileLaunchPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.linuxtools.valgrind.memcheck"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.linuxtools.profiling.launch.launch"; //$NON-NLS-1$
 
 	// The shared instance
-	private static MemcheckPlugin plugin;
+	private static ProfileLaunchPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public MemcheckPlugin() {
+	public ProfileLaunchPlugin() {
 	}
 
 	/*
@@ -50,8 +51,12 @@ public class MemcheckPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static MemcheckPlugin getDefault() {
+	public static ProfileLaunchPlugin getDefault() {
 		return plugin;
+	}
+
+	public static Shell getActiveWorkbenchShell() {
+		return getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
 	}
 
 }
