@@ -8,8 +8,14 @@
  * Contributors:
  *    Kent Sebastian <ksebasti@redhat.com> - initial API and implementation 
  *******************************************************************************/ 
-package org.eclipse.linuxtools.oprofile.ui.model;
+package org.eclipse.linuxtools.oprofile.ui.popupmenu;
 
-public class UiModelEvent {
+import org.eclipse.debug.ui.actions.ContextualLaunchAction;
 
+public class ProfileAsLaunchAction extends ContextualLaunchAction {
+	public static final String LAUNCH_MODE = "oprofile";
+	
+	public ProfileAsLaunchAction() {
+		super(LAUNCH_MODE);
+	}
 }
