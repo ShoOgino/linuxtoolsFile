@@ -10,16 +10,31 @@
  *******************************************************************************/
 package org.eclipse.linuxtools.valgrind.tests;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.linuxtools.valgrind.launch.IValgrindToolPage;
-import org.eclipse.linuxtools.valgrind.launch.ValgrindLaunchPlugin;
+import java.io.File;
+import java.io.IOException;
 
-public abstract class ValgrindLaunchMockPlugin extends ValgrindLaunchPlugin {
-	@Override
-	public IValgrindToolPage getToolPage(String id) throws CoreException {
-		return substitutePage();
+import org.eclipse.linuxtools.valgrind.core.ValgrindCommand;
+
+public class ValgrindMockCommand extends ValgrindCommand {
+	protected int exitcode;
+	
+	public ValgrindMockCommand(int exitcode) {
+		this.exitcode = exitcode;
 	}
 	
-	public abstract IValgrindToolPage substitutePage();
-
+	@Override
+	public String whichValgrind() throws IOException {
+		return "/path/to/valgrind"; //$NON-NLS-1$
+	}
+	
+	@Override
+	public void execute(String[] commandArray, String[] env, File wd,
+			boolean usePty) throws IOException {
+		args = commandArray;
+	}
+	
+	@Override
+	public Process getProcess() {
+		return new ValgrindMockProcess(exitcode);
+	}
 }
