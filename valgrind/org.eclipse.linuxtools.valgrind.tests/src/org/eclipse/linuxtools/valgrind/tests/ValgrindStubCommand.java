@@ -15,10 +15,10 @@ import java.io.IOException;
 
 import org.eclipse.linuxtools.valgrind.core.ValgrindCommand;
 
-public class ValgrindMockCommand extends ValgrindCommand {
+public class ValgrindStubCommand extends ValgrindCommand {
 	protected int exitcode;
 	
-	public ValgrindMockCommand(int exitcode) {
+	public ValgrindStubCommand(int exitcode) {
 		this.exitcode = exitcode;
 	}
 	
@@ -35,6 +35,6 @@ public class ValgrindMockCommand extends ValgrindCommand {
 	
 	@Override
 	public Process getProcess() {
-		return new ValgrindMockProcess(exitcode);
+		return new ValgrindStubProcess(exitcode);
 	}
 }

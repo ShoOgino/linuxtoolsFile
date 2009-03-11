@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ValgrindMockProcess extends Process {
+public class ValgrindStubProcess extends Process {
 	protected int exitcode;
 	
-	public ValgrindMockProcess(int exitcode) {
+	public ValgrindStubProcess(int exitcode) {
 		this.exitcode = exitcode;
 	}
 
