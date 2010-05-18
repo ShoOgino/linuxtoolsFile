@@ -8,27 +8,27 @@
  * Contributors:
  *    Elliott Baron <ebaron@redhat.com> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.internal.valgrind.massif.tests;
+package org.eclipse.linuxtools.internal.valgrind.memcheck.tests;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.linuxtools.internal.valgrind.massif.MassifHeapTreeNode;
-import org.eclipse.linuxtools.internal.valgrind.massif.MassifViewPart;
+import org.eclipse.linuxtools.internal.valgrind.ui.CoreMessagesViewer;
 import org.eclipse.linuxtools.internal.valgrind.ui.ValgrindUIPlugin;
+import org.eclipse.linuxtools.internal.valgrind.ui.ValgrindViewPart;
+import org.eclipse.linuxtools.valgrind.core.IValgrindMessage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 
-public class ExpandCollapseTest extends AbstractMassifTest {
+public class ExpandCollapseTest extends AbstractMemcheckTest {
 	
-	protected TreeViewer viewer;
+	protected CoreMessagesViewer viewer;
 	protected Menu contextMenu;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		proj = createProjectAndBuild("alloctest"); //$NON-NLS-1$
+		proj = createProjectAndBuild("basicTest"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -41,19 +41,19 @@ public class ExpandCollapseTest extends AbstractMassifTest {
 		ILaunchConfiguration config = createConfiguration(proj.getProject());
 		doLaunch(config, "testDefaults"); //$NON-NLS-1$
 		
-		MassifViewPart view = (MassifViewPart) ValgrindUIPlugin.getDefault().getView().getDynamicView();
-		viewer = view.getTreeViewer();
+		ValgrindViewPart view = ValgrindUIPlugin.getDefault().getView();
+		viewer = view.getMessagesViewer();
 		contextMenu = viewer.getTree().getMenu();
 		
-		// Select first snapshot and expand it
-		MassifHeapTreeNode[] snapshots = (MassifHeapTreeNode[]) viewer.getInput();
-		MassifHeapTreeNode snapshot = snapshots[0];
-		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { snapshot }));
+		// Select first error and expand it
+		IValgrindMessage[] messages = (IValgrindMessage[]) viewer.getInput();
+		IValgrindMessage element = messages[0];
+		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { element }));
 		viewer.setSelection(selection);
 		contextMenu.notifyListeners(SWT.Show, null);
 		contextMenu.getItem(0).notifyListeners(SWT.Selection, null);
 		
-		checkExpanded(snapshot, true);
+		checkExpanded(element, true);
 	}
 	
 	public void testCollapse() throws Exception {
@@ -61,17 +61,17 @@ public class ExpandCollapseTest extends AbstractMassifTest {
 		testExpand();
 		
 		// Then collapse it
-		MassifHeapTreeNode[] snapshots = (MassifHeapTreeNode[]) viewer.getInput();
-		MassifHeapTreeNode snapshot = snapshots[0];
-		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { snapshot }));
+		IValgrindMessage[] messages = (IValgrindMessage[]) viewer.getInput();
+		IValgrindMessage element = messages[0];
+		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { element }));
 		viewer.setSelection(selection);
 		contextMenu.notifyListeners(SWT.Show, null);
 		contextMenu.getItem(1).notifyListeners(SWT.Selection, null);
 		
-		checkExpanded(snapshot, false);
+		checkExpanded(element, false);
 	}
 
-	private void checkExpanded(MassifHeapTreeNode element, boolean expanded) {
+	private void checkExpanded(IValgrindMessage element, boolean expanded) {
 		if (element.getChildren().length > 0) {
 			// only applicable to internal nodes
 			if (expanded) {
@@ -81,7 +81,7 @@ public class ExpandCollapseTest extends AbstractMassifTest {
 				assertFalse(viewer.getExpandedState(element));
 			}
 		}
-		for (MassifHeapTreeNode child : element.getChildren()) {
+		for (IValgrindMessage child : element.getChildren()) {
 			checkExpanded(child, expanded);
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Red Hat, Inc.
+ * Copyright (c) 2008 Red Hat, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,27 +7,24 @@
  *
  * Contributors:
  *    Elliott Baron <ebaron@redhat.com> - initial API and implementation
- *******************************************************************************/
-package org.eclipse.linuxtools.internal.valgrind.massif.tests;
+ *******************************************************************************/ 
+package org.eclipse.linuxtools.internal.valgrind.memcheck.tests;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class MassifTestsPlugin extends AbstractUIPlugin {
+public class MemcheckTestsPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.linuxtools.valgrind.massif.tests"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.linuxtools.valgrind.memcheck.tests"; //$NON-NLS-1$
 
 	// The shared instance
-	private static MassifTestsPlugin plugin;
+	private static MemcheckTestsPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public MassifTestsPlugin() {
+	public MemcheckTestsPlugin() {
 	}
 
 	/*
@@ -53,7 +50,7 @@ public class MassifTestsPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static MassifTestsPlugin getDefault() {
+	public static MemcheckTestsPlugin getDefault() {
 		return plugin;
 	}
 
