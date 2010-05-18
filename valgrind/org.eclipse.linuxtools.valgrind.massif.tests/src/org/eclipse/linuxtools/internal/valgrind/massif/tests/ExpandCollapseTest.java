@@ -8,28 +8,27 @@
  * Contributors:
  *    Elliott Baron <ebaron@redhat.com> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.internal.valgrind.cachegrind.tests;
+package org.eclipse.linuxtools.internal.valgrind.massif.tests;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.linuxtools.internal.valgrind.cachegrind.CachegrindViewPart;
-import org.eclipse.linuxtools.internal.valgrind.cachegrind.model.CachegrindOutput;
-import org.eclipse.linuxtools.internal.valgrind.cachegrind.model.ICachegrindElement;
+import org.eclipse.linuxtools.internal.valgrind.massif.MassifHeapTreeNode;
+import org.eclipse.linuxtools.internal.valgrind.massif.MassifViewPart;
 import org.eclipse.linuxtools.internal.valgrind.ui.ValgrindUIPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 
-public class ExpandCollapseTest extends AbstractCachegrindTest {
-
+public class ExpandCollapseTest extends AbstractMassifTest {
+	
 	protected TreeViewer viewer;
 	protected Menu contextMenu;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		proj = createProjectAndBuild("cpptest"); //$NON-NLS-1$
+		proj = createProjectAndBuild("alloctest"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -42,19 +41,19 @@ public class ExpandCollapseTest extends AbstractCachegrindTest {
 		ILaunchConfiguration config = createConfiguration(proj.getProject());
 		doLaunch(config, "testDefaults"); //$NON-NLS-1$
 		
-		CachegrindViewPart view = (CachegrindViewPart) ValgrindUIPlugin.getDefault().getView().getDynamicView();
-		viewer = view.getViewer();
+		MassifViewPart view = (MassifViewPart) ValgrindUIPlugin.getDefault().getView().getDynamicView();
+		viewer = view.getTreeViewer();
 		contextMenu = viewer.getTree().getMenu();
 		
 		// Select first snapshot and expand it
-		CachegrindOutput[] outputs = (CachegrindOutput[]) viewer.getInput();
-		CachegrindOutput output = outputs[0];
-		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { output }));
+		MassifHeapTreeNode[] snapshots = (MassifHeapTreeNode[]) viewer.getInput();
+		MassifHeapTreeNode snapshot = snapshots[0];
+		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { snapshot }));
 		viewer.setSelection(selection);
 		contextMenu.notifyListeners(SWT.Show, null);
 		contextMenu.getItem(0).notifyListeners(SWT.Selection, null);
 		
-		checkExpanded(output, true);
+		checkExpanded(snapshot, true);
 	}
 	
 	public void testCollapse() throws Exception {
@@ -62,18 +61,18 @@ public class ExpandCollapseTest extends AbstractCachegrindTest {
 		testExpand();
 		
 		// Then collapse it
-		CachegrindOutput[] outputs = (CachegrindOutput[]) viewer.getInput();
-		CachegrindOutput output = outputs[0];
-		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { output }));
+		MassifHeapTreeNode[] snapshots = (MassifHeapTreeNode[]) viewer.getInput();
+		MassifHeapTreeNode snapshot = snapshots[0];
+		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { snapshot }));
 		viewer.setSelection(selection);
 		contextMenu.notifyListeners(SWT.Show, null);
 		contextMenu.getItem(1).notifyListeners(SWT.Selection, null);
 		
-		checkExpanded(output, false);
+		checkExpanded(snapshot, false);
 	}
 
-	private void checkExpanded(ICachegrindElement element, boolean expanded) {
-		if (element.getChildren() != null && element.getChildren().length > 0) {
+	private void checkExpanded(MassifHeapTreeNode element, boolean expanded) {
+		if (element.getChildren().length > 0) {
 			// only applicable to internal nodes
 			if (expanded) {
 				assertTrue(viewer.getExpandedState(element));
@@ -81,10 +80,9 @@ public class ExpandCollapseTest extends AbstractCachegrindTest {
 			else {
 				assertFalse(viewer.getExpandedState(element));
 			}
-			for (ICachegrindElement child : element.getChildren()) {
-				checkExpanded(child, expanded);
-			}
+		}
+		for (MassifHeapTreeNode child : element.getChildren()) {
+			checkExpanded(child, expanded);
 		}
 	}
-	
 }

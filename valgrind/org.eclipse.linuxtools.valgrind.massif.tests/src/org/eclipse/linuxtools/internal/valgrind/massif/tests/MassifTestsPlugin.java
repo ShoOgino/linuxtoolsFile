@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Red Hat, Inc.
+ * Copyright (c) 2008, 2009 Red Hat, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *    Elliott Baron <ebaron@redhat.com> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.internal.valgrind.cachegrind.tests;
+package org.eclipse.linuxtools.internal.valgrind.massif.tests;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -16,18 +16,18 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class CachegrindTestsPlugin extends AbstractUIPlugin {
+public class MassifTestsPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.linuxtools.valgrind.cachegrind.tests"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.linuxtools.valgrind.massif.tests"; //$NON-NLS-1$
 
 	// The shared instance
-	private static CachegrindTestsPlugin plugin;
+	private static MassifTestsPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public CachegrindTestsPlugin() {
+	public MassifTestsPlugin() {
 	}
 
 	/*
@@ -53,7 +53,7 @@ public class CachegrindTestsPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static CachegrindTestsPlugin getDefault() {
+	public static MassifTestsPlugin getDefault() {
 		return plugin;
 	}
 
