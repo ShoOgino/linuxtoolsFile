@@ -1,27 +1,34 @@
 /*******************************************************************************
- * Copyright (c) 2009 Red Hat, Inc.
+ * Copyright (c) 2007, 2008 Wind River Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     Red Hat - initial API and implementation
+ *     Wind River Systems - initial API and implementation
  *******************************************************************************/
 package org.eclipse.linuxtools.changelog.core.actions;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 
-public class ChangeLogRootContainer {
+/**
+ * SourceEditorInput
+ */
+public class SourceEditorInput extends StorageEditorInput {
 
-	private IProject proj;
-	
-	public ChangeLogRootContainer(IProject project) {
-		proj = project;
+	/**
+	 * @param storage that represents a source file
+	 */
+	public SourceEditorInput(IStorage storage) {
+		super(storage);
 	}
 
-	public IResource[] members() {
-		return new IResource[]{proj};
+	/*
+	 * @see org.eclipse.ui.IEditorInput#exists()
+	 */
+	public boolean exists() {
+		return false;
 	}
+
 }
