@@ -6,26 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - Jeff Briggs, Henry Hughes, Ryan Morse
+ *     IBM Corporation - Jeff Briggs, Henry Hughes, Ryan Morse, Anithra P J
  *******************************************************************************/
 
-package org.eclipse.linuxtools.systemtap.ui.graphing.actions;
+package org.eclipse.linuxtools.systemtap.ui.graphicalrun.actions;
 
 import java.util.ArrayList;
 
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.linuxtools.systemtap.ui.consolelog.actions.ConsoleAction;
-import org.eclipse.linuxtools.systemtap.ui.consolelog.structures.ScriptConsole;
-import org.eclipse.linuxtools.systemtap.ui.editor.PathEditorInput;
-import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingConstants;
-import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingPerspective;
-import org.eclipse.linuxtools.systemtap.ui.graphing.views.GraphSelectorView;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSet;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSetParser;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.structures.ChartStreamDaemon;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.structures.ChartStreamDaemon2;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.ui.wizards.dataset.DataSetWizard;
-import org.eclipse.linuxtools.systemtap.ui.structures.runnable.LoggedCommand;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
@@ -34,8 +22,19 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
-
-
+import org.eclipse.linuxtools.systemtap.ui.consolelog.LoggedCommand2;
+import org.eclipse.linuxtools.systemtap.ui.consolelog.actions.ConsoleAction;
+import org.eclipse.linuxtools.systemtap.ui.consolelog.structures.ScriptConsole;
+import org.eclipse.linuxtools.systemtap.ui.editor.PathEditorInput;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSet;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSetParser;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.structures.ChartStreamDaemon;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.ui.wizards.dataset.DataSetWizard;
+import org.eclipse.linuxtools.systemtap.ui.graphicalrun.structures.ChartStreamDaemon2;
+import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingConstants;
+import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingPerspective;
+import org.eclipse.linuxtools.systemtap.ui.graphing.views.GraphSelectorView;
+import org.eclipse.linuxtools.systemtap.ui.ide.IDEPerspective;
 
 /**
  * The action to allow users to change the parsing expression while a script is activly running.
@@ -49,6 +48,7 @@ public class ModifyParsingAction extends ConsoleAction implements IWorkbenchWind
 	 * Finally, it will dispose of the old <code>ChartStreamDaemon2</code> and add an new
 	 * one in its place.
 	 */
+	@SuppressWarnings("unchecked")
 	public void run() {
 		DataSetWizard wizard = new DataSetWizard(GraphingConstants.DataSetMetaData, getFilePath());
 		IWorkbench workbench = PlatformUI.getWorkbench();
@@ -62,9 +62,9 @@ public class ModifyParsingAction extends ConsoleAction implements IWorkbenchWind
 
 		if(null != parser && null != dataSet) {
 			ScriptConsole console = super.getActive();
-			LoggedCommand cmd = console.getCommand();
+			LoggedCommand2 cmd = console.getCommand();
 
-			ArrayList<?> listeners = cmd.getInputStreamListeners();
+			ArrayList listeners = cmd.getInputStreamListeners();
 			ChartStreamDaemon2 daemon = null;
 			if(null != listeners) {
 				for(int i=0; i<listeners.size(); i++) {
@@ -95,7 +95,7 @@ public class ModifyParsingAction extends ConsoleAction implements IWorkbenchWind
 	 */
 	private String getFilePath() {
 		try {
-			IWorkbenchPage p = PlatformUI.getWorkbench().showPerspective("org.eclipse.linuxtools.systemtap.ui.ide.IDEPerspective", PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+			IWorkbenchPage p = PlatformUI.getWorkbench().showPerspective(IDEPerspective.ID, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			IEditorPart ed = p.getActiveEditor();
 			PlatformUI.getWorkbench().showPerspective(GraphingPerspective.ID, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			return ((PathEditorInput)ed.getEditorInput()).getPath().toString();

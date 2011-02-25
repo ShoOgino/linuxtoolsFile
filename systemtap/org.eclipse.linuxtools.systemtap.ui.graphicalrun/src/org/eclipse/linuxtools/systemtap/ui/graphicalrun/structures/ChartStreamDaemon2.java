@@ -6,16 +6,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - Jeff Briggs, Henry Hughes, Ryan Morse
+ *     IBM Corporation - Jeff Briggs, Henry Hughes, Ryan Morse, Anithra P J
  *******************************************************************************/
 
-package org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.structures;
-
+package org.eclipse.linuxtools.systemtap.ui.graphicalrun.structures;
 
 import org.eclipse.linuxtools.systemtap.ui.consolelog.structures.ScriptConsole;
 import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSet;
 import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSetParser;
-
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.structures.ChartStreamDaemon;
 
 /**
  * Listens for data events and populates the internal <code>DataSet</code> with the data
@@ -25,7 +24,6 @@ import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSetPa
 public class ChartStreamDaemon2 extends ChartStreamDaemon {
 	public ChartStreamDaemon2(ScriptConsole console, IDataSet d, IDataSetParser p) {
 		super(d, p);
-		
 	}
 
 	/**
@@ -38,7 +36,8 @@ public class ChartStreamDaemon2 extends ChartStreamDaemon {
 		parser = p;
 		if(0 != outputData.length())
 			outputData.delete(0, outputData.length()-1);
-		outputData.append(console.getOutput());
+		//outputData.append(console.);
+		outputData.append(console.getCommand().getOutput());
 	}
 	
 	/**

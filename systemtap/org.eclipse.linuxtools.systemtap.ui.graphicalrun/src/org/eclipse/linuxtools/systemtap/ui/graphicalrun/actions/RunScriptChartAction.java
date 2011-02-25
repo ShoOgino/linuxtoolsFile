@@ -6,20 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - Jeff Briggs, Henry Hughes, Ryan Morse
+ *     IBM Corporation - Jeff Briggs, Henry Hughes, Ryan Morse, Anithra P J
  *******************************************************************************/
 
-package org.eclipse.linuxtools.systemtap.ui.ide.actions;
+package org.eclipse.linuxtools.systemtap.ui.graphicalrun.actions;
 
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingConstants;
-import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingPerspective;
-import org.eclipse.linuxtools.systemtap.ui.graphing.views.GraphSelectorView;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSet;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSetParser;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.structures.ChartStreamDaemon2;
-import org.eclipse.linuxtools.systemtap.ui.graphingapi.ui.wizards.dataset.DataSetWizard;
-import org.eclipse.linuxtools.systemtap.ui.logging.LogManager;
+
+
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -28,13 +22,31 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
 
+import org.eclipse.linuxtools.systemtap.ui.consolelog.ScpClient;
+import org.eclipse.linuxtools.systemtap.ui.consolelog.dialogs.SelectServerDialog;
+import org.eclipse.linuxtools.systemtap.ui.consolelog.internal.ConsoleLogPlugin;
+import org.eclipse.linuxtools.systemtap.ui.consolelog.preferences.ConsoleLogPreferenceConstants;
+import org.eclipse.linuxtools.systemtap.ui.consolelog.structures.ScriptConsole;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSet;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.nonui.datasets.IDataSetParser;
+import org.eclipse.linuxtools.systemtap.ui.graphingapi.ui.wizards.dataset.DataSetWizard;
+import org.eclipse.linuxtools.systemtap.ui.logging.LogManager;
+import org.eclipse.linuxtools.systemtap.ui.structures.PasswordPrompt;
+import org.eclipse.linuxtools.systemtap.ui.graphicalrun.structures.ChartStreamDaemon2;
+import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingConstants;
+import org.eclipse.linuxtools.systemtap.ui.graphing.GraphingPerspective;
+import org.eclipse.linuxtools.systemtap.ui.graphing.views.GraphSelectorView;
+import org.eclipse.linuxtools.systemtap.ui.ide.IDESessionSettings;
+import org.eclipse.linuxtools.systemtap.ui.ide.actions.RunScriptAction;
+import org.eclipse.linuxtools.systemtap.ui.ide.structures.StapErrorParser;
 
 /**
  * Action used to run the systemTap script in the active editor.  This action will start stap
  * and send the output to both the <code>ScriptConsole</code> window and a <code>DataSet</code>.
  * @author Ryan Morse
  */
-public class RunScriptChartAction extends RunScriptOptionsAction implements IWorkbenchWindowActionDelegate {
+@SuppressWarnings("deprecation")
+public class RunScriptChartAction extends RunScriptAction implements IWorkbenchWindowActionDelegate {
 	public RunScriptChartAction() {
 		super();
 		LogManager.logDebug("initialized", this);
@@ -56,17 +68,34 @@ public class RunScriptChartAction extends RunScriptOptionsAction implements IWor
 	public void run() {
 		LogManager.logDebug("Start run:", this);
 		continueRun = true;
-
+    	if(ConsoleLogPlugin.getDefault().getPluginPreferences().getBoolean(ConsoleLogPreferenceConstants.REMEMBER_SERVER)!=true)
+        	
+        {
+			new SelectServerDialog(fWindow.getShell()).open();
+		}
+	
 		if(isValid()) {
-			@SuppressWarnings("unused")
+			 try{
+				 
+					ScpClient scpclient = new ScpClient();
+					serverfileName = fileName.substring(fileName.lastIndexOf('/')+1);
+					tmpfileName="/tmp/"+ serverfileName;
+					 scpclient.transfer(fileName,tmpfileName);
+			        }catch(Exception e){e.printStackTrace();}
+			
 			String[] script = buildScript();
-			@SuppressWarnings("unused")
+			
 			String[] envVars = getEnvironmentVariables();
-
+			
+			
 			if(continueRun) {
-				createClientSession();
-				subscription.addInputStreamListener(new ChartStreamDaemon2(console, dataSet, parser));
-
+				//createClientSession();
+			    	ScriptConsole console = ScriptConsole.getInstance(serverfileName);
+	                console.run(script, envVars, new PasswordPrompt(IDESessionSettings.password), new StapErrorParser());
+	            
+			//	subscription.addInputStreamListener(new ChartStreamDaemon2(console, dataSet, parser));
+				console.getCommand().addInputStreamListener(new ChartStreamDaemon2(console, dataSet, parser));
+				
 				//Change to the graphing perspective
 				try {
 					IWorkbenchPage p = PlatformUI.getWorkbench().showPerspective(GraphingPerspective.ID, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
@@ -90,12 +119,11 @@ public class RunScriptChartAction extends RunScriptOptionsAction implements IWor
 	 */
 	protected String[] buildScript() {
 		String[] script;
-
 		getChartingOptions();
 		
-		if(useOptions)
-			script = buildOptionsScript();
-		else
+	//	if(useOptions)
+		//	script = buildOptionsScript();
+		//else
 			script = buildStandardScript();
 		
 		return script;
@@ -112,17 +140,28 @@ public class RunScriptChartAction extends RunScriptOptionsAction implements IWor
 		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.create();
 		dialog.open();
-
 		parser = wizard.getParser();
+		
 		dataSet = wizard.getDataSet();
+		
 
 		if(null == parser || null == dataSet)
+		{
 			continueRun = false;
-		
+		}
 		wizard.dispose();
+		
 	}
 	
-	private boolean useOptions = false;
+	 /* protected String getFilePath() {
+	
+		  IEditorPart ed = fWindow.getActivePage().getActiveEditor();
+	      return ((PathEditorInput)ed.getEditorInput()).getPath().toString();
+    
+	  }*/
+	
+	//private boolean useOptions = false;
 	private IDataSet dataSet = null;
 	private IDataSetParser parser = null;
+
 }
