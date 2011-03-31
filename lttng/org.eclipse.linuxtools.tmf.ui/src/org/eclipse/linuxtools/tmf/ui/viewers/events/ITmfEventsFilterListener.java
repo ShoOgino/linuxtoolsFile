@@ -10,29 +10,15 @@
  *   Patrick Tasse - Initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.linuxtools.tmf.signal;
+package org.eclipse.linuxtools.tmf.ui.viewers.events;
 
+import org.eclipse.linuxtools.tmf.filter.ITmfFilter;
 import org.eclipse.linuxtools.tmf.trace.ITmfTrace;
 
-/**
- * <b><u>TmfTraceClosedSignal</u></b>
- */
-public class TmfTraceClosedSignal extends TmfSignal {
+public interface ITmfEventsFilterListener {
 
-    private final ITmfTrace fTrace;
-    
-    public TmfTraceClosedSignal(Object source, ITmfTrace trace) {
-        super(source);
-        fTrace = trace;
-    }
-
-    public ITmfTrace getTrace() {
-        return fTrace;
-    }
-
-    @Override
-    @SuppressWarnings("nls")
-    public String toString() {
-        return "[TmfTraceClosedSignal (" + fTrace.getName() + ")]";
-    }
+	public void filterApplied(ITmfFilter filter, ITmfTrace trace);
+	
+	public void searchApplied(ITmfFilter filter, ITmfTrace trace);
+	
 }

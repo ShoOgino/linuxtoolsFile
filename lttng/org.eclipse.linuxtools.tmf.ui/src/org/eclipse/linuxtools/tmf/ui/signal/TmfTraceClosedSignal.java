@@ -10,29 +10,29 @@
  *   Patrick Tasse - Initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.linuxtools.tmf.signal;
+package org.eclipse.linuxtools.tmf.ui.signal;
 
-import org.eclipse.core.resources.IResource;
+import org.eclipse.linuxtools.tmf.signal.TmfSignal;
+import org.eclipse.linuxtools.tmf.trace.ITmfTrace;
 
 /**
- * <b><u>TmfTraceParserUpdatedSignal</u></b>
+ * <b><u>TmfTraceClosedSignal</u></b>
  */
-public class TmfTraceParserUpdatedSignal extends TmfSignal {
+public class TmfTraceClosedSignal extends TmfSignal {
 
-    private final IResource fTraceResource;
+    private final ITmfTrace fTrace;
     
-    public TmfTraceParserUpdatedSignal(Object source, IResource traceResource) {
+    public TmfTraceClosedSignal(Object source, ITmfTrace trace) {
         super(source);
-        fTraceResource = traceResource;
+        fTrace = trace;
     }
 
-    public IResource getTraceResource() {
-        return fTraceResource;
+    public ITmfTrace getTrace() {
+        return fTrace;
     }
 
     @Override
-    @SuppressWarnings("nls")
     public String toString() {
-        return "[TmfTraceParserUpdatedSignal (" + fTraceResource.getName() + ")]";
+        return "[TmfTraceClosedSignal (" + fTrace.getName() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

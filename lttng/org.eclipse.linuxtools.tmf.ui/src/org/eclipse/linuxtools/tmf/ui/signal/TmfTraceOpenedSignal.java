@@ -10,9 +10,12 @@
  *   Patrick Tasse - Initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.linuxtools.tmf.signal;
+package org.eclipse.linuxtools.tmf.ui.signal;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.linuxtools.tmf.signal.TmfSignal;
 import org.eclipse.linuxtools.tmf.trace.ITmfTrace;
+import org.eclipse.linuxtools.tmf.ui.viewers.events.ITmfEventsFilterProvider;
 
 /**
  * <b><u>TmfTraceOpenedSignal</u></b>
@@ -20,19 +23,30 @@ import org.eclipse.linuxtools.tmf.trace.ITmfTrace;
 public class TmfTraceOpenedSignal extends TmfSignal {
 
     private final ITmfTrace fTrace;
+    private final IResource fResource;
+    private final ITmfEventsFilterProvider fEventsFilterProvider;
     
-    public TmfTraceOpenedSignal(Object source, ITmfTrace trace) {
+    public TmfTraceOpenedSignal(Object source, ITmfTrace trace, IResource resource, ITmfEventsFilterProvider eventsFilterProvider) {
         super(source);
         fTrace = trace;
+        fResource = resource;
+        fEventsFilterProvider = eventsFilterProvider;
     }
 
     public ITmfTrace getTrace() {
         return fTrace;
     }
 
+    public IResource getResource() {
+        return fResource;
+    }
+
+    public ITmfEventsFilterProvider getEventsFilterProvider() {
+        return fEventsFilterProvider;
+    }
+
     @Override
-    @SuppressWarnings("nls")
     public String toString() {
-        return "[TmfTraceOpenedSignal (" + fTrace.getName() + ")]";
+        return "[TmfTraceOpenedSignal (" + fTrace.getName() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
