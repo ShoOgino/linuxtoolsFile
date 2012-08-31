@@ -8,18 +8,11 @@
  * Contributors:
  *    Red Hat initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.profiling.snapshot.launch;
+package org.eclipse.linuxtools.internal.profiling.provider;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.linuxtools.profiling.launch.ProfileLaunchConfigurationTabGroup;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.linuxtools.profiling.snapshot.launch.messages"; //$NON-NLS-1$
-	public static String SnapshotLaunchShortcut_0;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-
-	private Messages() {
-	}
+public abstract class ProviderLaunchConfigurationTabGroup extends
+		ProfileLaunchConfigurationTabGroup {
+	// Marker for a our own tab kind.
 }
