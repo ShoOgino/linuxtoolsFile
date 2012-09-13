@@ -8,10 +8,20 @@
  * Contributors:
  *    Red Hat initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.profiling.launch;
+package org.eclipse.linuxtools.profiling.memory.launch;
 
-import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
+import org.eclipse.osgi.util.NLS;
 
-public abstract class ProfileLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
- // Just a marker for our own tab kind.
+public class Messages extends NLS {
+	private static final String BUNDLE_NAME = "org.eclipse.linuxtools.profiling.memory.launch.messages"; //$NON-NLS-1$
+	public static String MemoryLaunchShortcut_0;
+	public static String MemoryPreferencesPage_0;
+	public static String MemoryPreferencesPage_1;
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
+
+	private Messages() {
+	}
 }

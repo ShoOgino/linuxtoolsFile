@@ -8,10 +8,24 @@
  * Contributors:
  *    Red Hat initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.profiling.launch;
+package org.eclipse.linuxtools.profiling.memory;
 
-import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
+import org.eclipse.linuxtools.internal.profiling.provider.ProviderOptionsTab;
 
-public abstract class ProfileLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
- // Just a marker for our own tab kind.
+/**
+ * The options tab used for this plug-in's launch configuration tab group.
+ * 
+ */
+public class MemoryOptionsTab extends ProviderOptionsTab {
+
+	@Override
+	public String getName() {
+		return MemoryProfileConstants.PLUGIN_NAME;
+	}
+
+	@Override
+	protected String getProfilingType() {
+		return MemoryProfileConstants.PROFILING_TYPE;
+	}
+
 }

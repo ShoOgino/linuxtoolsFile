@@ -8,10 +8,15 @@
  * Contributors:
  *    Red Hat initial API and implementation
  *******************************************************************************/
-package org.eclipse.linuxtools.profiling.launch;
 
-import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
+package org.eclipse.linuxtools.profiling.memory;
 
-public abstract class ProfileLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
- // Just a marker for our own tab kind.
+import org.eclipse.linuxtools.internal.profiling.provider.AbstractProviderPreferencesPage;
+
+public class MemoryPreferencesPage extends AbstractProviderPreferencesPage {
+
+	@Override
+	public String getProfilingType() {
+		return MemoryProfileConstants.PROFILING_TYPE;
+	}
 }
